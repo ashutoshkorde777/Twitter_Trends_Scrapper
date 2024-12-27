@@ -33,6 +33,7 @@ This project is a **Twitter Trends Scraper** built with **Flask**, **Selenium**,
    COLLECTION_NAME=your-collection-name
    TWITTER_USERNAME=your-twitter-username
    TWITTER_PASSWORD=your-twitter-password
+   TWITTER_MAIL=your-twitter-mail
    CHROMEDRIVER_PATH=/path/to/your/chromedriver
    ```
 
