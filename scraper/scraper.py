@@ -35,7 +35,7 @@ db_name = os.getenv("DB_NAME", "twitter_trends")
 collection_name = os.getenv("COLLECTION_NAME", "trends") 
 account_username = os.getenv("TWITTER_USERNAME", "none")  
 account_password = os.getenv("TWITTER_PASSWORD", "none")  
-
+account_mail = os.getenv("TWITTER_MAIL", "none")  
 
 # MongoDB setup
 client = MongoClient(mongo_uri)
@@ -146,32 +146,43 @@ def scrape_trending_topics():
 
             # Twitter login logic
             try:
+                # Wait for username input field and enter the username
                 username = WebDriverWait(driver, 30).until(
                     EC.visibility_of_element_located((By.XPATH, "//input[@name='text']"))
                 )
                 username.send_keys(account_username)
+                
+                # Click the 'Next' button
                 next_button = driver.find_element(By.XPATH, "//span[contains(text(),'Next')]")
                 next_button.click()
                 time.sleep(3)
 
-                # Check if the email input field is visible
-                mail = WebDriverWait(driver, 10).until(
-                    EC.visibility_of_element_located((By.XPATH, "//input[@name='text']"))
-                )
-                
-                if mail.is_displayed():  # This checks if the email input field is visible
-                    mail.send_keys("ashutoshkorde411@gmail.com")
-                    next_button = driver.find_element(By.XPATH, "//span[contains(text(),'Next')]")
-                    next_button.click()
-                    time.sleep(3)
+                try:
+                    # Try to find the email input field, if it exists
+                    mail = WebDriverWait(driver, 10).until(
+                        EC.visibility_of_element_located((By.XPATH, "//input[@name='text']"))
+                    )
+                    if mail.is_displayed():
+                        # If the email field is visible, fill in the email
+                        mail.send_keys("ashutoshkorde411@gmail.com")
+                        next_button = driver.find_element(By.XPATH, "//span[contains(text(),'Next')]")
+                        next_button.click()
+                        time.sleep(3)
+                except Exception as e:
+                    # If email field is not found, continue to the password page
+                    print("No email field, proceeding to password.")
 
+                # Wait for password input field and enter the password
                 password = WebDriverWait(driver, 30).until(
                     EC.visibility_of_element_located((By.XPATH, "//input[@name='password']"))
                 )
                 password.send_keys(account_password)
+
+                # Click the 'Log in' button
                 log_in = driver.find_element(By.XPATH, "//span[contains(text(),'Log in')]")
                 log_in.click()
                 time.sleep(5)
+                
                 print("Login successful.")
 
             except Exception as e:
