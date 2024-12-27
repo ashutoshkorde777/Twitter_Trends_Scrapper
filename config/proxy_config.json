@@ -1,0 +1,6 @@
+{
+  "proxy_urls": [
+      "http://USERNAME:PASSWORD@us-dc.proxymesh.com:31280"
+      
+  ]
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Trends</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMX/zHVnF9KkXQSzNgzvPa0oD+zxI4P+7fi5MX5" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <i class="fab fa-twitter logo"></i>
+            <h1>Twitter Trends Scraper</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="content">
+            <button id="scrape-btn" class="primary-btn">
+                <i class="fas fa-sync-alt"></i> Run the Script
+            </button>
+            <div id="loader"></div>
+            <div id="results" class="results-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Developed Using Selenium MongoDB Flask<i class="fas fa-heart"></i> For Web Scraping Twitter Page To Get Top Trends</p>
+    </footer>
+
+    <script>
+        document.getElementById("scrape-btn").addEventListener("click", async () => {
+            
+            document.getElementById('loader').style.display = 'block';
+    
+            try {
+                
+                const response = await fetch("/run-scraper");
+    
+                if (!response.ok) {
+                    throw new Error('Error during scraping');
+                }
+    
+                const data = await response.json();
+                const id = data._id;
+                const recordResponse = await fetch(`/get_record/${id}`);
+    
+                if (!recordResponse.ok) {
+                    throw new Error('Error fetching the record');
+                }
+    
+                const recordData = await recordResponse.json();
+                document.getElementById('loader').style.display = 'none';
+                const resultsDiv = document.getElementById("results");
+                resultsDiv.innerHTML = `
+                    <h2>Trending Topics as of ${data.date_time}</h2>
+                    <ul>
+                        ${data.trends.map(trend => `<li>${trend}</li>`).join("")}
+                    </ul>
+                    <p>IP Address used: <strong>${data.ip_address}</strong></p>
+                    <pre>${JSON.stringify(recordData, null, 2)}</pre>
+                `;
+            } catch (error) {
+                document.getElementById('loader').style.display = 'none';
+                console.error(error);
+                alert("An error occurred while running the scraper.");
+            }
+        });
+    </script>
+    
+</body>
+</html>
