@@ -54,4 +54,4 @@ This project is a **Twitter Trends Scraper** built with **Flask**, **Selenium**,
 
 ---
 ## Preview
-![Preview Screenshot](https://example.com/screenshot.png "Preview of Application")
+![Preview Screenshot](./preview.png "Preview of Application")
