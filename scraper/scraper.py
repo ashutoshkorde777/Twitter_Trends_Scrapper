@@ -79,7 +79,7 @@ def get_driver(proxy_url=None):
         print("No proxy is being used.")
     
     # Common options
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     options.add_argument("--ignore-certificate-errors")
     options.add_argument("--disable-extensions")
@@ -100,7 +100,7 @@ def get_driver(proxy_url=None):
         
         # Create a new driver without proxy
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.add_argument("--disable-gpu")
         options.add_argument("--ignore-certificate-errors")
         options.add_argument("--disable-extensions")
@@ -153,6 +153,17 @@ def scrape_trending_topics():
                 next_button = driver.find_element(By.XPATH, "//span[contains(text(),'Next')]")
                 next_button.click()
                 time.sleep(3)
+
+                # Check if the email input field is visible
+                mail = WebDriverWait(driver, 10).until(
+                    EC.visibility_of_element_located((By.XPATH, "//input[@name='text']"))
+                )
+                
+                if mail.is_displayed():  # This checks if the email input field is visible
+                    mail.send_keys("ashutoshkorde411@gmail.com")
+                    next_button = driver.find_element(By.XPATH, "//span[contains(text(),'Next')]")
+                    next_button.click()
+                    time.sleep(3)
 
                 password = WebDriverWait(driver, 30).until(
                     EC.visibility_of_element_located((By.XPATH, "//input[@name='password']"))
